@@ -50,12 +50,12 @@ actor {
   include MixinAuthorization(accessControlState);
 
   let toolUsage = Map.empty<Text, Nat>();
-  var totalFiles = 0;
-  var pdfFiles = 0;
-  var imageFiles = 0;
-  var totalSessions = 0;
-  var magicButtonClicks = 0;
-  var sharePopupTriggers = 0;
+  stable var totalFiles = 0;
+  stable var pdfFiles = 0;
+  stable var imageFiles = 0;
+  stable var totalSessions = 0;
+  stable var magicButtonClicks = 0;
+  stable var sharePopupTriggers = 0;
 
   let activityLog = List.empty<ToolEvent>();
   let maxActivityLogSize = 50;
@@ -64,7 +64,7 @@ actor {
 
   let toolToggles = Map.empty<Text, Bool>();
 
-  var adminPassword : Text = "admin123";
+  stable var adminPassword : Text = "admin123";
 
   let userProfiles = Map.empty<Principal, UserProfile>();
 
