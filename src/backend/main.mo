@@ -20,6 +20,17 @@ actor {
     recentActivity : [ToolEvent];
   };
 
+  type ExtendedStats = {
+    totalFiles : Nat;
+    pdfFiles : Nat;
+    imageFiles : Nat;
+    totalSessions : Nat;
+    magicButtonClicks : Nat;
+    sharePopupTriggers : Nat;
+    toolUsage : [(Text, Nat)];
+    hourlyFileCount : Nat;
+  };
+
   type ToolEvent = {
     toolName : Text;
     timestamp : Time.Time;
@@ -40,12 +51,20 @@ actor {
 
   let toolUsage = Map.empty<Text, Nat>();
   var totalFiles = 0;
+  var pdfFiles = 0;
+  var imageFiles = 0;
   var totalSessions = 0;
+  var magicButtonClicks = 0;
+  var sharePopupTriggers = 0;
 
   let activityLog = List.empty<ToolEvent>();
   let maxActivityLogSize = 50;
 
-  var adminPassword : Text = "89516admin@#@@";
+  let fileTimestamps = List.empty<Time.Time>();
+
+  let toolToggles = Map.empty<Text, Bool>();
+
+  var adminPassword : Text = "admin123";
 
   let userProfiles = Map.empty<Principal, UserProfile>();
 
@@ -85,12 +104,37 @@ actor {
   public shared func recordFile() : async Nat {
     let previous = totalFiles;
     totalFiles += 1;
+    fileTimestamps.add(Time.now());
+    previous;
+  };
+
+  public shared func recordFileTyped(fileType : Text) : async Nat {
+    let previous = totalFiles;
+    totalFiles += 1;
+    if (fileType == "pdf") {
+      pdfFiles += 1;
+    } else {
+      imageFiles += 1;
+    };
+    fileTimestamps.add(Time.now());
     previous;
   };
 
   public shared func recordSession() : async Nat {
     let previous = totalSessions;
     totalSessions += 1;
+    previous;
+  };
+
+  public shared func recordMagicButtonClick() : async Nat {
+    let previous = magicButtonClicks;
+    magicButtonClicks += 1;
+    previous;
+  };
+
+  public shared func recordSharePopup() : async Nat {
+    let previous = sharePopupTriggers;
+    sharePopupTriggers += 1;
     previous;
   };
 
@@ -112,6 +156,54 @@ actor {
     };
 
     prevCount + 1;
+  };
+
+  public shared func setToolEnabled(toolId : Text, enabled : Bool) : async () {
+    toolToggles.add(toolId, enabled);
+  };
+
+  public query func getToolEnabled(toolId : Text) : async Bool {
+    switch (toolToggles.get(toolId)) {
+      case (null) { true };
+      case (?v) { v };
+    };
+  };
+
+  public query func getAllToolStates() : async [(Text, Bool)] {
+    toolToggles.toArray();
+  };
+
+  public query func getHourlyFileCount() : async Nat {
+    let now = Time.now();
+    let oneHourAgo = now - 3_600_000_000_000;
+    var count = 0;
+    for (ts in fileTimestamps.toArray().vals()) {
+      if (ts >= oneHourAgo) {
+        count += 1;
+      };
+    };
+    count;
+  };
+
+  public query func getExtendedStats() : async ExtendedStats {
+    let now = Time.now();
+    let oneHourAgo = now - 3_600_000_000_000;
+    var hourlyCount = 0;
+    for (ts in fileTimestamps.toArray().vals()) {
+      if (ts >= oneHourAgo) {
+        hourlyCount += 1;
+      };
+    };
+    {
+      totalFiles;
+      pdfFiles;
+      imageFiles;
+      totalSessions;
+      magicButtonClicks;
+      sharePopupTriggers;
+      toolUsage = toolUsage.toArray();
+      hourlyFileCount = hourlyCount;
+    };
   };
 
   public query func getPlatformStats() : async PlatformStats {

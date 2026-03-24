@@ -10,6 +10,7 @@ import {
 import { ThemeProvider } from "next-themes";
 import { Suspense, lazy, useEffect } from "react";
 import Layout from "./components/Layout";
+import { ThemeColorProvider } from "./contexts/ThemeContext";
 import { useActor } from "./hooks/useActor";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -159,9 +160,11 @@ declare module "@tanstack/react-router" {
 
 export default function App() {
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-      <RouterProvider router={router} />
-      <Toaster richColors position="top-right" />
-    </ThemeProvider>
+    <ThemeColorProvider>
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+        <RouterProvider router={router} />
+        <Toaster richColors position="top-right" />
+      </ThemeProvider>
+    </ThemeColorProvider>
   );
 }

@@ -23,7 +23,7 @@ export default function SharePopup({
 }: SharePopupProps) {
   const [copied, setCopied] = useState(false);
   const url = window.location.href;
-  const shareText = `I just used ${toolName} on FileZap — works insanely fast and 100% free! No signup needed 🚀 Try it: ${url}`;
+  const shareText = `I just used ${toolName} on BoltTools.app — works insanely fast and 100% free! No signup needed 🚀 Try it: ${url}`;
 
   const copy = () => {
     navigator.clipboard.writeText(shareText);
@@ -54,7 +54,7 @@ export default function SharePopup({
             This saved you time?
           </DialogTitle>
           <DialogDescription>
-            Share FileZap and help others discover it! 🚀
+            Share BoltTools.app and help others discover it! 🚀
           </DialogDescription>
         </DialogHeader>
         <div className="mt-2">

@@ -80,10 +80,8 @@ export default function DragDropZone({
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") triggerInput();
         }}
-        className={`relative brand-border-gradient rounded-2xl p-8 md:p-12 text-center cursor-pointer transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-          dragging
-            ? "dropzone-glow scale-[1.01] bg-secondary/50"
-            : "bg-card hover:bg-secondary/30"
+        className={`relative brand-border-gradient rounded-2xl p-8 md:p-12 text-center cursor-pointer transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-accent glass-panel ${
+          dragging ? "dropzone-glow scale-[1.01]" : "hover:bg-secondary/10"
         }`}
       >
         <input

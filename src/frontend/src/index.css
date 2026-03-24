@@ -76,6 +76,23 @@
     --sidebar-ring: 0.82 0.12 200;
   }
 
+  /* Color theme overrides */
+  [data-color-theme="cyber-purple"] {
+    --accent: 0.72 0.28 305;
+    --primary: 0.58 0.24 295;
+    --ring: 0.72 0.28 305;
+  }
+  [data-color-theme="emerald-green"] {
+    --accent: 0.78 0.18 155;
+    --primary: 0.6 0.2 150;
+    --ring: 0.78 0.18 155;
+  }
+  [data-color-theme="sunset-orange"] {
+    --accent: 0.75 0.22 45;
+    --primary: 0.62 0.24 35;
+    --ring: 0.75 0.22 45;
+  }
+
   * {
     @apply border-border;
   }
@@ -149,5 +166,103 @@
       oklch(0.11 0.025 265) 0%,
       oklch(0.14 0.028 265) 100%
     );
+  }
+
+  /* Glassmorphism */
+  .glass-panel {
+    background: oklch(0.16 0.025 265 / 0.55);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid oklch(0.82 0.12 200 / 0.2);
+  }
+  .dark .glass-panel {
+    background: oklch(0.12 0.02 265 / 0.6);
+    border: 1px solid oklch(0.82 0.12 200 / 0.18);
+  }
+
+  /* Magic button glow animation */
+  @keyframes magic-glow {
+    0%,
+    100% {
+      box-shadow: 0 0 8px 2px oklch(0.82 0.12 200 / 0.5), 0 0 24px 4px
+        oklch(0.62 0.26 300 / 0.3);
+    }
+    50% {
+      box-shadow: 0 0 20px 6px oklch(0.82 0.12 200 / 0.8), 0 0 48px 12px
+        oklch(0.62 0.26 300 / 0.5);
+    }
+  }
+  .magic-glow-animate {
+    animation: magic-glow 1.4s ease-in-out infinite;
+  }
+
+  /* Theme-scoped gradient overrides */
+  [data-color-theme="cyber-purple"] .brand-gradient,
+  [data-color-theme="cyber-purple"].brand-gradient {
+    background: linear-gradient(
+      135deg,
+      oklch(0.72 0.28 305),
+      oklch(0.55 0.32 320)
+    );
+  }
+  [data-color-theme="cyber-purple"] .brand-gradient-text {
+    background: linear-gradient(
+      135deg,
+      oklch(0.72 0.28 305),
+      oklch(0.55 0.32 320)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  [data-color-theme="emerald-green"] .brand-gradient,
+  [data-color-theme="emerald-green"].brand-gradient {
+    background: linear-gradient(
+      135deg,
+      oklch(0.78 0.18 155),
+      oklch(0.58 0.22 175)
+    );
+  }
+  [data-color-theme="emerald-green"] .brand-gradient-text {
+    background: linear-gradient(
+      135deg,
+      oklch(0.78 0.18 155),
+      oklch(0.58 0.22 175)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  [data-color-theme="sunset-orange"] .brand-gradient,
+  [data-color-theme="sunset-orange"].brand-gradient {
+    background: linear-gradient(
+      135deg,
+      oklch(0.75 0.22 45),
+      oklch(0.65 0.28 20)
+    );
+  }
+  [data-color-theme="sunset-orange"] .brand-gradient-text {
+    background: linear-gradient(
+      135deg,
+      oklch(0.75 0.22 45),
+      oklch(0.65 0.28 20)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Live ticker pulse */
+  @keyframes ticker-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
+  }
+  .ticker-number {
+    animation: ticker-pulse 2s ease-in-out infinite;
   }
 }

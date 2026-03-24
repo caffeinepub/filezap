@@ -113,7 +113,7 @@ export default function HomePage() {
   const [files, setFiles] = useState<File[]>([]);
   const navigate = useNavigate();
   document.title =
-    "FileZap — Free All-in-One File Tools: Compress, Convert & Merge PDFs and Images";
+    "BoltTools.app — Free All-in-One File Tools: Compress, Convert & Merge PDFs and Images";
 
   const handleFilesSelected = (f: File[]) => {
     setFiles(f);
@@ -187,8 +187,17 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      <div className="max-w-2xl mx-auto px-4 mb-8">
-        <div className="adsense-placeholder">Advertisement</div>
+      {/* Social proof stats bar */}
+      <div className="max-w-4xl mx-auto px-4 mb-4 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
+        <span>📄 1M+ files processed</span>
+        <span>🌍 Users in 50+ countries</span>
+        <span>⚡ Avg. 2s processing time</span>
+        <span>🔒 Zero server uploads, ever</span>
+      </div>
+
+      {/* Ad between hero and PDF tools */}
+      <div className="adsense-placeholder max-w-4xl mx-auto px-4 mb-6">
+        Advertisement
       </div>
 
       {/* PDF Tools */}
@@ -227,6 +236,11 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* Ad between PDF tools and Image tools */}
+      <div className="adsense-placeholder max-w-4xl mx-auto px-4 mb-6">
+        Advertisement
+      </div>
 
       {/* Image Tools */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-10">
@@ -285,9 +299,12 @@ export default function HomePage() {
 
       {/* CTA */}
       <section className="max-w-3xl mx-auto px-4 sm:px-6 py-12 text-center">
-        <h2 className="text-2xl font-bold mb-2">Ready to zap your files?</h2>
+        <h2 className="text-2xl font-bold mb-2">
+          Ready to bolt through your files?
+        </h2>
         <p className="text-muted-foreground mb-6">
-          Join thousands who use FileZap daily. It's free, fast and private.
+          Join thousands who use BoltTools.app daily. It's free, fast and
+          private.
         </p>
         <Button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}

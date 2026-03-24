@@ -6,6 +6,7 @@ import { useActor } from "../hooks/useActor";
 import DragDropZone from "./DragDropZone";
 import FilePreview from "./FilePreview";
 import ProgressBar from "./ProgressBar";
+import RelatedTools from "./RelatedTools";
 import SharePopup from "./SharePopup";
 import SmartSuggestions from "./SmartSuggestions";
 
@@ -81,7 +82,16 @@ export default function ToolPageLayout({
       setProgress(100);
       toast.success("File processed successfully!");
       actor?.recordToolUsage(toolId).catch(() => {});
-      actor?.recordFile().catch(() => {});
+      // Use recordFileTyped if available, fall back to recordFile
+      const a = actor as any;
+      if (typeof a?.recordFileTyped === "function") {
+        a.recordFileTyped(isPdf ? "pdf" : "image").catch(() => {});
+      } else {
+        actor?.recordFile().catch(() => {});
+      }
+      if (typeof a?.recordMagicButtonClick === "function") {
+        a.recordMagicButtonClick().catch(() => {});
+      }
     } catch (e) {
       const msg =
         e instanceof Error ? e.message : "Processing failed. Please try again.";
@@ -103,7 +113,13 @@ export default function ToolPageLayout({
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(url), 5000);
     setShowShare(true);
-    // Keep ref for future use
+    toast.info("📌 Bookmark BoltTools.app to use it again instantly!", {
+      duration: 4000,
+    });
+    const ac = actor as any;
+    if (typeof ac?.recordSharePopup === "function") {
+      ac.recordSharePopup().catch(() => {});
+    }
     downloadAnchorRef.current = null;
   };
 
@@ -114,7 +130,15 @@ export default function ToolPageLayout({
     setProgress(0);
   };
 
-  document.title = `${toolName} — Free Online Tool | FileZap`;
+  const handleShareOpen = () => {
+    setShowShare(true);
+    const ac = actor as any;
+    if (typeof ac?.recordSharePopup === "function") {
+      ac.recordSharePopup().catch(() => {});
+    }
+  };
+
+  document.title = `${toolName} — Free Online Tool | BoltTools.app`;
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
@@ -172,7 +196,16 @@ export default function ToolPageLayout({
       )}
 
       {isProcessing && (
-        <ProgressBar progress={progress} isActive={isProcessing} />
+        <div className="mt-6">
+          <Button
+            className="w-full h-12 text-base font-semibold brand-gradient border-0 text-white magic-glow-animate cursor-not-allowed"
+            disabled
+            data-ocid="tool.loading_state"
+          >
+            <Sparkles className="w-5 h-5 mr-2 animate-spin" /> Processing...
+          </Button>
+          <ProgressBar progress={progress} isActive={isProcessing} />
+        </div>
       )}
 
       {error && (
@@ -203,7 +236,7 @@ export default function ToolPageLayout({
             </Button>
             <Button
               variant="outline"
-              onClick={() => setShowShare(true)}
+              onClick={handleShareOpen}
               className="h-12"
               data-ocid="tool.button"
             >
@@ -226,6 +259,8 @@ export default function ToolPageLayout({
         onClose={() => setShowShare(false)}
         toolName={toolName}
       />
+
+      <RelatedTools currentToolId={toolId} />
 
       <div className="adsense-placeholder mt-10">Advertisement</div>
 
