@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
-import { Menu, Moon, Palette, Sun, X, Zap } from "lucide-react";
+import { Menu, Moon, Palette, Share2, Sun, X, Zap } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 import { colorThemeOptions, useThemeColor } from "../contexts/ThemeContext";
+import ShareInviteModal from "./ShareInviteModal";
 
 const navLinks = [
   { label: "All Tools", href: "/" },
@@ -16,6 +17,7 @@ export default function Header() {
   const { colorTheme, setColorTheme } = useThemeColor();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const paletteRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,17 +32,6 @@ export default function Header() {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
-
-  const handleShare = () => {
-    const text = `I just used BoltTools.app — works insanely fast! Check it out: ${window.location.origin}`;
-    if (navigator.share) {
-      navigator
-        .share({ title: "BoltTools.app", text, url: window.location.origin })
-        .catch(() => {});
-    } else {
-      navigator.clipboard.writeText(text);
-    }
-  };
 
   return (
     <header
@@ -75,10 +66,11 @@ export default function Header() {
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={handleShare}
+            onClick={() => setShareOpen(true)}
             className="hidden sm:flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-md hover:bg-secondary"
-            data-ocid="header.button"
+            data-ocid="header.open_modal_button"
           >
+            <Share2 className="w-3.5 h-3.5" />
             Share ❤️
           </button>
 
@@ -177,8 +169,22 @@ export default function Header() {
               {l.label}
             </a>
           ))}
+          <button
+            type="button"
+            onClick={() => {
+              setMobileOpen(false);
+              setShareOpen(true);
+            }}
+            className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground rounded-md hover:bg-secondary mt-1"
+            data-ocid="header.open_modal_button"
+          >
+            <Share2 className="w-3.5 h-3.5" />
+            Share ❤️
+          </button>
         </div>
       )}
+
+      <ShareInviteModal open={shareOpen} onClose={() => setShareOpen(false)} />
     </header>
   );
 }

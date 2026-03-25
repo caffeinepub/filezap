@@ -10,6 +10,16 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface ExtendedStats {
+  'totalFiles' : bigint,
+  'imageFiles' : bigint,
+  'hourlyFileCount' : bigint,
+  'magicButtonClicks' : bigint,
+  'pdfFiles' : bigint,
+  'totalSessions' : bigint,
+  'sharePopupTriggers' : bigint,
+  'toolUsage' : Array<[string, bigint]>,
+}
 export interface PlatformStats {
   'totalFiles' : bigint,
   'recentActivity' : Array<ToolEvent>,
@@ -25,22 +35,32 @@ export type UserRole = { 'admin' : null } |
 export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'getAllToolStates' : ActorMethod<[], Array<[string, boolean]>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getExtendedStats' : ActorMethod<[], ExtendedStats>,
+  'getHourlyFileCount' : ActorMethod<[], bigint>,
   'getPlatformStats' : ActorMethod<[], PlatformStats>,
   'getRecentActivity' : ActorMethod<[], Array<ToolEvent>>,
+  'getReferralCount' : ActorMethod<[string], bigint>,
   'getToolCount' : ActorMethod<[string], bigint>,
+  'getToolEnabled' : ActorMethod<[string], boolean>,
   'getToolStats' : ActorMethod<[], Array<[string, bigint]>>,
   'getTotalFiles' : ActorMethod<[], bigint>,
   'getTotalSessions' : ActorMethod<[], bigint>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'recordFile' : ActorMethod<[], bigint>,
+  'recordFileTyped' : ActorMethod<[string], bigint>,
+  'recordMagicButtonClick' : ActorMethod<[], bigint>,
+  'recordReferral' : ActorMethod<[string], bigint>,
   'recordSession' : ActorMethod<[], bigint>,
+  'recordSharePopup' : ActorMethod<[], bigint>,
   'recordToolUsage' : ActorMethod<[string], bigint>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'setToolEnabled' : ActorMethod<[string, boolean], undefined>,
   'toolExists' : ActorMethod<[string], boolean>,
-  'updateAdminPassword' : ActorMethod<[string], undefined>,
+  'updateAdminPassword' : ActorMethod<[string, string], boolean>,
   'verifyAdminPassword' : ActorMethod<[string], boolean>,
 }
 export declare const idlService: IDL.ServiceClass;

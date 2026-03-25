@@ -179,11 +179,8 @@ export default function AdminDashboard() {
       const a = actor as any;
       let ok = false;
       if (typeof a.updateAdminPassword === "function") {
-        // Try two-param version first (new backend), fall back to one-param
-        const result = await (a.updateAdminPassword.length >= 2
-          ? a.updateAdminPassword(currentPw, newPw)
-          : a.updateAdminPassword(newPw).then(() => true));
-        ok = result === true || result === undefined;
+        const result = await a.updateAdminPassword(currentPw, newPw);
+        ok = result === true;
       }
       if (ok) {
         toast.success("Password updated successfully!");

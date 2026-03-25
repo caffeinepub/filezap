@@ -100,6 +100,16 @@ export interface PlatformStats {
     totalSessions: bigint;
     toolUsage: Array<[string, bigint]>;
 }
+export interface ExtendedStats {
+    totalFiles: bigint;
+    imageFiles: bigint;
+    hourlyFileCount: bigint;
+    magicButtonClicks: bigint;
+    pdfFiles: bigint;
+    totalSessions: bigint;
+    sharePopupTriggers: bigint;
+    toolUsage: Array<[string, bigint]>;
+}
 export interface UserProfile {
     name: string;
 }
@@ -111,22 +121,32 @@ export enum UserRole {
 export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    getAllToolStates(): Promise<Array<[string, boolean]>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
+    getExtendedStats(): Promise<ExtendedStats>;
+    getHourlyFileCount(): Promise<bigint>;
     getPlatformStats(): Promise<PlatformStats>;
     getRecentActivity(): Promise<Array<ToolEvent>>;
+    getReferralCount(code: string): Promise<bigint>;
     getToolCount(toolName: string): Promise<bigint>;
+    getToolEnabled(toolId: string): Promise<boolean>;
     getToolStats(): Promise<Array<[string, bigint]>>;
     getTotalFiles(): Promise<bigint>;
     getTotalSessions(): Promise<bigint>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     recordFile(): Promise<bigint>;
+    recordFileTyped(fileType: string): Promise<bigint>;
+    recordMagicButtonClick(): Promise<bigint>;
+    recordReferral(code: string): Promise<bigint>;
     recordSession(): Promise<bigint>;
+    recordSharePopup(): Promise<bigint>;
     recordToolUsage(toolName: string): Promise<bigint>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
+    setToolEnabled(toolId: string, enabled: boolean): Promise<void>;
     toolExists(toolName: string): Promise<boolean>;
-    updateAdminPassword(newPassword: string): Promise<void>;
+    updateAdminPassword(currentPassword: string, newPassword: string): Promise<boolean>;
     verifyAdminPassword(password: string): Promise<boolean>;
 }
 import type { UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
@@ -160,6 +180,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async getAllToolStates(): Promise<Array<[string, boolean]>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAllToolStates();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getAllToolStates();
+            return result;
+        }
+    }
     async getCallerUserProfile(): Promise<UserProfile | null> {
         if (this.processError) {
             try {
@@ -186,6 +220,34 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.getCallerUserRole();
             return from_candid_UserRole_n4(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getExtendedStats(): Promise<ExtendedStats> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getExtendedStats();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getExtendedStats();
+            return result;
+        }
+    }
+    async getHourlyFileCount(): Promise<bigint> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getHourlyFileCount();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getHourlyFileCount();
+            return result;
         }
     }
     async getPlatformStats(): Promise<PlatformStats> {
@@ -216,6 +278,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async getReferralCount(arg0: string): Promise<bigint> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getReferralCount(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getReferralCount(arg0);
+            return result;
+        }
+    }
     async getToolCount(arg0: string): Promise<bigint> {
         if (this.processError) {
             try {
@@ -227,6 +303,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.getToolCount(arg0);
+            return result;
+        }
+    }
+    async getToolEnabled(arg0: string): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getToolEnabled(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getToolEnabled(arg0);
             return result;
         }
     }
@@ -314,6 +404,48 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async recordFileTyped(arg0: string): Promise<bigint> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.recordFileTyped(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.recordFileTyped(arg0);
+            return result;
+        }
+    }
+    async recordMagicButtonClick(): Promise<bigint> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.recordMagicButtonClick();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.recordMagicButtonClick();
+            return result;
+        }
+    }
+    async recordReferral(arg0: string): Promise<bigint> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.recordReferral(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.recordReferral(arg0);
+            return result;
+        }
+    }
     async recordSession(): Promise<bigint> {
         if (this.processError) {
             try {
@@ -325,6 +457,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.recordSession();
+            return result;
+        }
+    }
+    async recordSharePopup(): Promise<bigint> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.recordSharePopup();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.recordSharePopup();
             return result;
         }
     }
@@ -356,6 +502,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async setToolEnabled(arg0: string, arg1: boolean): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.setToolEnabled(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.setToolEnabled(arg0, arg1);
+            return result;
+        }
+    }
     async toolExists(arg0: string): Promise<boolean> {
         if (this.processError) {
             try {
@@ -370,17 +530,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async updateAdminPassword(arg0: string): Promise<void> {
+    async updateAdminPassword(arg0: string, arg1: string): Promise<boolean> {
         if (this.processError) {
             try {
-                const result = await this.actor.updateAdminPassword(arg0);
+                const result = await this.actor.updateAdminPassword(arg0, arg1);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.updateAdminPassword(arg0);
+            const result = await this.actor.updateAdminPassword(arg0, arg1);
             return result;
         }
     }

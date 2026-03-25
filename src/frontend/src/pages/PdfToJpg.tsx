@@ -25,7 +25,7 @@ async function processFiles(
     canvas.width = viewport.width;
     canvas.height = viewport.height;
     const canvasContext = canvas.getContext("2d")!;
-    await page.render({ canvasContext, viewport }).promise;
+    await page.render({ canvasContext, canvas, viewport }).promise;
     const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
     const base64 = dataUrl.split(",")[1];
     const binStr = atob(base64);

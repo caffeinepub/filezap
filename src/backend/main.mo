@@ -9,8 +9,11 @@ import Array "mo:core/Array";
 import Principal "mo:core/Principal";
 import List "mo:core/List";
 
+
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+
+// Use migration function in new actor
 
 actor {
   type PlatformStats = {
@@ -64,9 +67,37 @@ actor {
 
   let toolToggles = Map.empty<Text, Bool>();
 
+  // Force reset to admin123 on every upgrade so user can always log in.
+  // Once logged in, use the Change Password feature to set a new one.
   stable var adminPassword : Text = "admin123";
 
+  system func postupgrade() {
+    adminPassword := "admin123";
+  };
+
   let userProfiles = Map.empty<Principal, UserProfile>();
+
+  // New referral tracking functionality
+  var referralCounts = Map.empty<Text, Nat>();
+
+  public shared ({ caller }) func recordReferral(code : Text) : async Nat {
+    if (code.size() > 100) {
+      Runtime.trap("Referral code too long");
+    };
+    let newCount = switch (referralCounts.get(code)) {
+      case (null) { 1 };
+      case (?count) { count + 1 };
+    };
+    referralCounts.add(code, newCount);
+    newCount;
+  };
+
+  public query ({ caller }) func getReferralCount(code : Text) : async Nat {
+    switch (referralCounts.get(code)) {
+      case (null) { 0 };
+      case (?count) { count };
+    };
+  };
 
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
@@ -89,11 +120,11 @@ actor {
     userProfiles.add(caller, profile);
   };
 
-  public query func verifyAdminPassword(password : Text) : async Bool {
+  public query ({ caller }) func verifyAdminPassword(password : Text) : async Bool {
     password == adminPassword;
   };
 
-  public shared func updateAdminPassword(currentPassword : Text, newPassword : Text) : async Bool {
+  public shared ({ caller }) func updateAdminPassword(currentPassword : Text, newPassword : Text) : async Bool {
     if (currentPassword != adminPassword) {
       return false;
     };
@@ -101,15 +132,13 @@ actor {
     true;
   };
 
-  public shared func recordFile() : async Nat {
-    let previous = totalFiles;
+  public shared ({ caller }) func recordFile() : async Nat {
     totalFiles += 1;
     fileTimestamps.add(Time.now());
-    previous;
+    totalFiles - 1;
   };
 
-  public shared func recordFileTyped(fileType : Text) : async Nat {
-    let previous = totalFiles;
+  public shared ({ caller }) func recordFileTyped(fileType : Text) : async Nat {
     totalFiles += 1;
     if (fileType == "pdf") {
       pdfFiles += 1;
@@ -117,28 +146,25 @@ actor {
       imageFiles += 1;
     };
     fileTimestamps.add(Time.now());
-    previous;
+    totalFiles - 1;
   };
 
-  public shared func recordSession() : async Nat {
-    let previous = totalSessions;
+  public shared ({ caller }) func recordSession() : async Nat {
     totalSessions += 1;
-    previous;
+    totalSessions - 1;
   };
 
-  public shared func recordMagicButtonClick() : async Nat {
-    let previous = magicButtonClicks;
+  public shared ({ caller }) func recordMagicButtonClick() : async Nat {
     magicButtonClicks += 1;
-    previous;
+    magicButtonClicks - 1;
   };
 
-  public shared func recordSharePopup() : async Nat {
-    let previous = sharePopupTriggers;
+  public shared ({ caller }) func recordSharePopup() : async Nat {
     sharePopupTriggers += 1;
-    previous;
+    sharePopupTriggers - 1;
   };
 
-  public shared func recordToolUsage(toolName : Text) : async Nat {
+  public shared ({ caller }) func recordToolUsage(toolName : Text) : async Nat {
     let prevCount = switch (toolUsage.get(toolName)) {
       case (null) { 0 };
       case (?count) { count };
@@ -158,22 +184,22 @@ actor {
     prevCount + 1;
   };
 
-  public shared func setToolEnabled(toolId : Text, enabled : Bool) : async () {
+  public shared ({ caller }) func setToolEnabled(toolId : Text, enabled : Bool) : async () {
     toolToggles.add(toolId, enabled);
   };
 
-  public query func getToolEnabled(toolId : Text) : async Bool {
+  public query ({ caller }) func getToolEnabled(toolId : Text) : async Bool {
     switch (toolToggles.get(toolId)) {
       case (null) { true };
       case (?v) { v };
     };
   };
 
-  public query func getAllToolStates() : async [(Text, Bool)] {
+  public query ({ caller }) func getAllToolStates() : async [(Text, Bool)] {
     toolToggles.toArray();
   };
 
-  public query func getHourlyFileCount() : async Nat {
+  public query ({ caller }) func getHourlyFileCount() : async Nat {
     let now = Time.now();
     let oneHourAgo = now - 3_600_000_000_000;
     var count = 0;
@@ -185,7 +211,7 @@ actor {
     count;
   };
 
-  public query func getExtendedStats() : async ExtendedStats {
+  public query ({ caller }) func getExtendedStats() : async ExtendedStats {
     let now = Time.now();
     let oneHourAgo = now - 3_600_000_000_000;
     var hourlyCount = 0;
@@ -206,7 +232,7 @@ actor {
     };
   };
 
-  public query func getPlatformStats() : async PlatformStats {
+  public query ({ caller }) func getPlatformStats() : async PlatformStats {
     {
       totalFiles;
       totalSessions;
@@ -215,30 +241,30 @@ actor {
     };
   };
 
-  public query func getToolStats() : async [(Text, Nat)] {
+  public query ({ caller }) func getToolStats() : async [(Text, Nat)] {
     toolUsage.toArray();
   };
 
-  public query func getRecentActivity() : async [ToolEvent] {
+  public query ({ caller }) func getRecentActivity() : async [ToolEvent] {
     activityLog.toArray().sort(ToolEvent.compareByTimestamp);
   };
 
-  public query func getTotalFiles() : async Nat {
+  public query ({ caller }) func getTotalFiles() : async Nat {
     totalFiles;
   };
 
-  public query func getTotalSessions() : async Nat {
+  public query ({ caller }) func getTotalSessions() : async Nat {
     totalSessions;
   };
 
-  public query func getToolCount(toolName : Text) : async Nat {
+  public query ({ caller }) func getToolCount(toolName : Text) : async Nat {
     switch (toolUsage.get(toolName)) {
       case (null) { 0 };
       case (?count) { count };
     };
   };
 
-  public query func toolExists(toolName : Text) : async Bool {
+  public query ({ caller }) func toolExists(toolName : Text) : async Bool {
     toolUsage.containsKey(toolName);
   };
 };

@@ -14,6 +14,16 @@ export const UserRole = IDL.Variant({
   'guest' : IDL.Null,
 });
 export const UserProfile = IDL.Record({ 'name' : IDL.Text });
+export const ExtendedStats = IDL.Record({
+  'totalFiles' : IDL.Nat,
+  'imageFiles' : IDL.Nat,
+  'hourlyFileCount' : IDL.Nat,
+  'magicButtonClicks' : IDL.Nat,
+  'pdfFiles' : IDL.Nat,
+  'totalSessions' : IDL.Nat,
+  'sharePopupTriggers' : IDL.Nat,
+  'toolUsage' : IDL.Vec(IDL.Tuple(IDL.Text, IDL.Nat)),
+});
 export const Time = IDL.Int;
 export const ToolEvent = IDL.Record({
   'timestamp' : Time,
@@ -29,11 +39,20 @@ export const PlatformStats = IDL.Record({
 export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'getAllToolStates' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Bool))],
+      ['query'],
+    ),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getExtendedStats' : IDL.Func([], [ExtendedStats], ['query']),
+  'getHourlyFileCount' : IDL.Func([], [IDL.Nat], ['query']),
   'getPlatformStats' : IDL.Func([], [PlatformStats], ['query']),
   'getRecentActivity' : IDL.Func([], [IDL.Vec(ToolEvent)], ['query']),
+  'getReferralCount' : IDL.Func([IDL.Text], [IDL.Nat], ['query']),
   'getToolCount' : IDL.Func([IDL.Text], [IDL.Nat], ['query']),
+  'getToolEnabled' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
   'getToolStats' : IDL.Func(
       [],
       [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Nat))],
@@ -48,11 +67,16 @@ export const idlService = IDL.Service({
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'recordFile' : IDL.Func([], [IDL.Nat], []),
+  'recordFileTyped' : IDL.Func([IDL.Text], [IDL.Nat], []),
+  'recordMagicButtonClick' : IDL.Func([], [IDL.Nat], []),
+  'recordReferral' : IDL.Func([IDL.Text], [IDL.Nat], []),
   'recordSession' : IDL.Func([], [IDL.Nat], []),
+  'recordSharePopup' : IDL.Func([], [IDL.Nat], []),
   'recordToolUsage' : IDL.Func([IDL.Text], [IDL.Nat], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'setToolEnabled' : IDL.Func([IDL.Text, IDL.Bool], [], []),
   'toolExists' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
-  'updateAdminPassword' : IDL.Func([IDL.Text], [], []),
+  'updateAdminPassword' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
   'verifyAdminPassword' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
 });
 
@@ -65,6 +89,16 @@ export const idlFactory = ({ IDL }) => {
     'guest' : IDL.Null,
   });
   const UserProfile = IDL.Record({ 'name' : IDL.Text });
+  const ExtendedStats = IDL.Record({
+    'totalFiles' : IDL.Nat,
+    'imageFiles' : IDL.Nat,
+    'hourlyFileCount' : IDL.Nat,
+    'magicButtonClicks' : IDL.Nat,
+    'pdfFiles' : IDL.Nat,
+    'totalSessions' : IDL.Nat,
+    'sharePopupTriggers' : IDL.Nat,
+    'toolUsage' : IDL.Vec(IDL.Tuple(IDL.Text, IDL.Nat)),
+  });
   const Time = IDL.Int;
   const ToolEvent = IDL.Record({ 'timestamp' : Time, 'toolName' : IDL.Text });
   const PlatformStats = IDL.Record({
@@ -77,11 +111,20 @@ export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'getAllToolStates' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Bool))],
+        ['query'],
+      ),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getExtendedStats' : IDL.Func([], [ExtendedStats], ['query']),
+    'getHourlyFileCount' : IDL.Func([], [IDL.Nat], ['query']),
     'getPlatformStats' : IDL.Func([], [PlatformStats], ['query']),
     'getRecentActivity' : IDL.Func([], [IDL.Vec(ToolEvent)], ['query']),
+    'getReferralCount' : IDL.Func([IDL.Text], [IDL.Nat], ['query']),
     'getToolCount' : IDL.Func([IDL.Text], [IDL.Nat], ['query']),
+    'getToolEnabled' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
     'getToolStats' : IDL.Func(
         [],
         [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Nat))],
@@ -96,11 +139,16 @@ export const idlFactory = ({ IDL }) => {
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'recordFile' : IDL.Func([], [IDL.Nat], []),
+    'recordFileTyped' : IDL.Func([IDL.Text], [IDL.Nat], []),
+    'recordMagicButtonClick' : IDL.Func([], [IDL.Nat], []),
+    'recordReferral' : IDL.Func([IDL.Text], [IDL.Nat], []),
     'recordSession' : IDL.Func([], [IDL.Nat], []),
+    'recordSharePopup' : IDL.Func([], [IDL.Nat], []),
     'recordToolUsage' : IDL.Func([IDL.Text], [IDL.Nat], []),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'setToolEnabled' : IDL.Func([IDL.Text, IDL.Bool], [], []),
     'toolExists' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
-    'updateAdminPassword' : IDL.Func([IDL.Text], [], []),
+    'updateAdminPassword' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
     'verifyAdminPassword' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
   });
 };
