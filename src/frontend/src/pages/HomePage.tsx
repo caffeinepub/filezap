@@ -11,8 +11,6 @@ import {
   Merge,
   Minimize2,
   Scissors,
-  Shield,
-  Star,
   Users,
   Zap,
 } from "lucide-react";
@@ -87,6 +85,20 @@ const imageTools = [
     icon: <FileOutput className="w-5 h-5" />,
     color: "from-rose-500 to-rose-600",
   },
+  {
+    id: "jpg-to-pdf",
+    name: "JPG to PDF",
+    desc: "Convert JPG images to PDF",
+    icon: <FileText className="w-5 h-5" />,
+    color: "from-amber-500 to-amber-600",
+  },
+  {
+    id: "png-to-pdf",
+    name: "PNG to PDF",
+    desc: "Convert PNG images to PDF",
+    icon: <FileText className="w-5 h-5" />,
+    color: "from-emerald-500 to-emerald-600",
+  },
 ];
 
 const trustBadges = [
@@ -107,8 +119,6 @@ const trustBadges = [
   },
 ];
 
-const STARS = [1, 2, 3, 4, 5];
-
 export default function HomePage() {
   const [files, setFiles] = useState<File[]>([]);
   const navigate = useNavigate();
@@ -126,84 +136,94 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen">
-      {/* Hero */}
-      <section className="pt-16 pb-12 px-4 sm:px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 text-sm text-accent mb-6">
-            <Zap className="w-3.5 h-3.5" />
-            100% Free · No Signup · Instant Processing
-          </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-4">
-            All-in-One Smart
-            <br />
-            <span className="brand-gradient-text">File Tools</span>
-          </h1>
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto mb-2">
-            Compress, merge, convert &amp; edit files — 100% free, private, and
-            blazing fast.
-          </p>
-          <div className="flex items-center justify-center gap-4 flex-wrap text-sm text-muted-foreground mb-8">
-            {[
-              "No signup ever",
-              "Files never leave your device",
-              "Private & secure",
-            ].map((b) => (
-              <span key={b} className="flex items-center gap-1.5">
-                <Shield className="w-3.5 h-3.5 text-accent" />
-                {b}
-              </span>
-            ))}
-          </div>
-          <div className="flex items-center justify-center gap-1 mb-10">
-            {STARS.map((n) => (
-              <Star
-                key={n}
-                className="w-4 h-4 fill-yellow-400 text-yellow-400"
-              />
-            ))}
-            <span className="ml-2 text-sm text-muted-foreground">
-              Trusted by thousands daily
-            </span>
-          </div>
-        </motion.div>
+    <div className="w-full bg-[#09090b] text-white">
+      {/* ================= HERO SECTION ================= */}
+      <section className="relative min-h-screen w-full overflow-hidden">
+        {/* Background Image */}
+        <img
+          src="/assets/generated/hero.dim_1920x1080.jpg"
+          alt="background"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
 
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="max-w-2xl mx-auto"
-        >
-          <DragDropZone
-            acceptedTypes=".pdf,.jpg,.jpeg,.png,.webp,.gif"
-            onFilesSelected={handleFilesSelected}
-            selectedFiles={files}
-            label="Drop any file here — we'll figure out the best tool"
-          />
-        </motion.div>
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/75" />
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col items-center"
+          >
+            <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-4 py-1.5 text-sm text-emerald-400 mb-6">
+              <Zap className="w-3.5 h-3.5" />
+              100% Free · No Signup · Instant Processing
+            </div>
+
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight max-w-3xl">
+              Merge &amp; Compress PDFs Instantly —{" "}
+              <span className="text-emerald-400">No Upload Required</span>
+            </h1>
+
+            <p className="mt-4 text-gray-300 max-w-xl text-lg">
+              Process your files directly in your browser. Fast, private, and
+              secure.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="mt-6 flex gap-4 flex-wrap justify-center">
+              <Link to="/merge-pdf">
+                <button
+                  type="button"
+                  className="bg-emerald-500 hover:bg-emerald-600 px-6 py-3 rounded-xl font-semibold transition flex items-center gap-2"
+                >
+                  <Merge className="w-4 h-4" /> Merge PDF
+                </button>
+              </Link>
+              <Link to="/compress-pdf">
+                <button
+                  type="button"
+                  className="border border-gray-600 px-6 py-3 rounded-xl hover:bg-gray-800 transition flex items-center gap-2"
+                >
+                  <Minimize2 className="w-4 h-4" /> Compress PDF
+                </button>
+              </Link>
+            </div>
+
+            {/* Trust Text */}
+            <p className="mt-6 text-sm text-gray-400">
+              🔒 No uploads • ⚡ Instant • 📱 Works on mobile
+            </p>
+
+            {/* Drop zone */}
+            <motion.div
+              initial={{ opacity: 0, y: 32 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="mt-10 w-full max-w-2xl"
+            >
+              <DragDropZone
+                acceptedTypes=".pdf,.jpg,.jpeg,.png,.webp,.gif"
+                onFilesSelected={handleFilesSelected}
+                selectedFiles={files}
+                label="Or drop any file — we'll pick the right tool automatically"
+              />
+            </motion.div>
+          </motion.div>
+        </div>
       </section>
 
-      {/* Social proof stats bar */}
-      <div className="max-w-4xl mx-auto px-4 mb-4 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
-        <span>📄 1M+ files processed</span>
-        <span>🌍 Users in 50+ countries</span>
-        <span>⚡ Avg. 2s processing time</span>
-        <span>🔒 Zero server uploads, ever</span>
-      </div>
-
-      {/* Ad between hero and PDF tools */}
-      <div className="adsense-placeholder max-w-4xl mx-auto px-4 mb-6">
+      {/* ================= AD SLOT ================= */}
+      <div className="adsense-placeholder max-w-4xl mx-auto px-4 py-6">
         Advertisement
       </div>
 
-      {/* PDF Tools */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-10">
+      {/* ================= PDF TOOLS ================= */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <h2 className="text-2xl font-bold mb-1">PDF Tools</h2>
-        <p className="text-muted-foreground text-sm mb-6">
+        <p className="text-gray-400 text-sm mb-6">
           Everything you need to work with PDF files
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -216,8 +236,7 @@ export default function HomePage() {
             >
               <Link
                 to={`/${tool.id}` as "/"}
-                className="group flex items-start gap-4 p-5 bg-card border border-border rounded-xl tool-card-hover"
-                data-ocid={`tools.item.${i + 1}`}
+                className="group flex items-start gap-4 p-5 bg-gray-900 border border-gray-800 rounded-xl hover:border-emerald-500/40 hover:bg-gray-800/80 transition-all"
               >
                 <div
                   className={`w-10 h-10 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center text-white shrink-0`}
@@ -225,27 +244,27 @@ export default function HomePage() {
                   {tool.icon}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold group-hover:text-accent transition-colors">
+                  <p className="font-semibold group-hover:text-emerald-400 transition-colors">
                     {tool.name}
                   </p>
-                  <p className="text-sm text-muted-foreground">{tool.desc}</p>
+                  <p className="text-sm text-gray-400">{tool.desc}</p>
                 </div>
-                <ArrowRight className="w-4 h-4 text-muted-foreground ml-auto shrink-0 group-hover:text-accent transition-colors" />
+                <ArrowRight className="w-4 h-4 text-gray-500 ml-auto shrink-0 group-hover:text-emerald-400 transition-colors" />
               </Link>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* Ad between PDF tools and Image tools */}
+      {/* ================= AD SLOT ================= */}
       <div className="adsense-placeholder max-w-4xl mx-auto px-4 mb-6">
         Advertisement
       </div>
 
-      {/* Image Tools */}
+      {/* ================= IMAGE TOOLS ================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-10">
         <h2 className="text-2xl font-bold mb-1">Image Tools</h2>
-        <p className="text-muted-foreground text-sm mb-6">
+        <p className="text-gray-400 text-sm mb-6">
           Compress, resize and convert images instantly
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -258,8 +277,7 @@ export default function HomePage() {
             >
               <Link
                 to={`/${tool.id}` as "/"}
-                className="group flex items-start gap-4 p-5 bg-card border border-border rounded-xl tool-card-hover"
-                data-ocid={`image-tools.item.${i + 1}`}
+                className="group flex items-start gap-4 p-5 bg-gray-900 border border-gray-800 rounded-xl hover:border-emerald-500/40 hover:bg-gray-800/80 transition-all"
               >
                 <div
                   className={`w-10 h-10 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center text-white shrink-0`}
@@ -267,49 +285,103 @@ export default function HomePage() {
                   {tool.icon}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold group-hover:text-accent transition-colors">
+                  <p className="font-semibold group-hover:text-emerald-400 transition-colors">
                     {tool.name}
                   </p>
-                  <p className="text-sm text-muted-foreground">{tool.desc}</p>
+                  <p className="text-sm text-gray-400">{tool.desc}</p>
                 </div>
-                <ArrowRight className="w-4 h-4 text-muted-foreground ml-auto shrink-0 group-hover:text-accent transition-colors" />
+                <ArrowRight className="w-4 h-4 text-gray-500 ml-auto shrink-0 group-hover:text-emerald-400 transition-colors" />
               </Link>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* Trust badges */}
+      {/* ================= TRUST BADGES ================= */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {trustBadges.map((b) => (
             <div
               key={b.label}
-              className="flex flex-col items-center text-center p-6 bg-card border border-border rounded-xl"
+              className="flex flex-col items-center text-center p-6 bg-gray-900 border border-gray-800 rounded-xl"
             >
-              <div className="w-12 h-12 brand-gradient rounded-xl flex items-center justify-center text-white mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center text-white mb-3">
                 {b.icon}
               </div>
               <p className="font-semibold">{b.label}</p>
-              <p className="text-sm text-muted-foreground mt-1">{b.sub}</p>
+              <p className="text-sm text-gray-400 mt-1">{b.sub}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="max-w-3xl mx-auto px-4 sm:px-6 py-12 text-center">
+      {/* ================= COMPARISON SECTION ================= */}
+      <section className="bg-[#09090b] py-16 px-6">
+        <h2 className="text-2xl md:text-3xl font-semibold text-center mb-10">
+          Why Choose <span className="text-emerald-400">BoltTools</span>?
+        </h2>
+
+        <div className="max-w-4xl mx-auto overflow-x-auto">
+          <table className="w-full text-left border border-gray-800 rounded-xl overflow-hidden">
+            <thead className="bg-gray-900">
+              <tr>
+                <th className="p-4">Feature</th>
+                <th className="p-4 text-emerald-400">BoltTools</th>
+                <th className="p-4 text-gray-400">Traditional Tools</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-800">
+              <tr>
+                <td className="p-4">Upload Required</td>
+                <td className="p-4 text-red-400">❌ No (client-side)</td>
+                <td className="p-4 text-green-400">✔ Yes (server upload)</td>
+              </tr>
+              <tr>
+                <td className="p-4">Privacy</td>
+                <td className="p-4 text-emerald-400">🔒 High</td>
+                <td className="p-4 text-yellow-400">⚠ Medium</td>
+              </tr>
+              <tr>
+                <td className="p-4">Speed</td>
+                <td className="p-4 text-emerald-400">⚡ Instant</td>
+                <td className="p-4 text-gray-400">🐢 Slower</td>
+              </tr>
+              <tr>
+                <td className="p-4">File Storage</td>
+                <td className="p-4 text-red-400">❌ None</td>
+                <td className="p-4 text-green-400">✔ Stored on servers</td>
+              </tr>
+              <tr>
+                <td className="p-4">File Size Limit</td>
+                <td className="p-4 text-emerald-400">✔ Browser RAM only</td>
+                <td className="p-4 text-yellow-400">⚠ 50–200MB</td>
+              </tr>
+              <tr>
+                <td className="p-4">Account Required</td>
+                <td className="p-4 text-red-400">❌ No signup ever</td>
+                <td className="p-4 text-green-400">✔ Often required</td>
+              </tr>
+              <tr>
+                <td className="p-4">Works Offline</td>
+                <td className="p-4 text-emerald-400">✔ After first load</td>
+                <td className="p-4 text-gray-400">❌ Always online</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* ================= CTA ================= */}
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 py-14 text-center">
         <h2 className="text-2xl font-bold mb-2">
           Ready to bolt through your files?
         </h2>
-        <p className="text-muted-foreground mb-6">
-          Join thousands who use BoltTools.app daily. It's free, fast and
-          private.
+        <p className="text-gray-400 mb-6">
+          Join thousands who use BoltTools.app daily. Free, fast, and private.
         </p>
         <Button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="h-12 px-8 text-base font-semibold brand-gradient border-0 text-white hover:opacity-90"
-          data-ocid="home.primary_button"
+          className="h-12 px-8 text-base font-semibold bg-emerald-500 hover:bg-emerald-600 border-0 text-white"
         >
           <Zap className="w-5 h-5 mr-2" /> Get Started — It's Free
         </Button>

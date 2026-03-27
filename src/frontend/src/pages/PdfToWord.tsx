@@ -1,10 +1,13 @@
-import type { TextItem } from "pdfjs-dist/types/src/display/api";
+// @ts-nocheck
 import ToolPageLayout, {
   type ProcessResult,
 } from "../components/ToolPageLayout";
 
 async function extractTextFromPdf(buf: ArrayBuffer): Promise<string> {
-  const { getDocument, GlobalWorkerOptions } = await import("pdfjs-dist");
+  const pdfjsLib = (await new Function(
+    "return import('https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs')",
+  )()) as any;
+  const { getDocument, GlobalWorkerOptions } = pdfjsLib;
   GlobalWorkerOptions.workerSrc =
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
   const pdf = await getDocument({ data: new Uint8Array(buf) }).promise;

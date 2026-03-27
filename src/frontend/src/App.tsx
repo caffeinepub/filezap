@@ -24,6 +24,10 @@ const CompressImage = lazy(() => import("./pages/CompressImage"));
 const ResizeImage = lazy(() => import("./pages/ResizeImage"));
 const ConvertImage = lazy(() => import("./pages/ConvertImage"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const JpgToPdf = lazy(() => import("./pages/JpgToPdf"));
+const PngToPdf = lazy(() => import("./pages/PngToPdf"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
 
 const PageLoader = () => (
   <div className="min-h-[60vh] flex items-center justify-center">
@@ -135,6 +139,26 @@ const adminRoute = createRoute({
   path: "/admin",
   component: wrap(AdminDashboard),
 });
+const jpgToPdfRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/jpg-to-pdf",
+  component: wrap(JpgToPdf),
+});
+const pngToPdfRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/png-to-pdf",
+  component: wrap(PngToPdf),
+});
+const privacyPolicyRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/privacy-policy",
+  component: wrap(PrivacyPolicy),
+});
+const contactRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/contact",
+  component: wrap(ContactPage),
+});
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -148,6 +172,10 @@ const routeTree = rootRoute.addChildren([
   resizeImageRoute,
   convertImageRoute,
   adminRoute,
+  jpgToPdfRoute,
+  pngToPdfRoute,
+  privacyPolicyRoute,
+  contactRoute,
 ]);
 
 const router = createRouter({ routeTree });

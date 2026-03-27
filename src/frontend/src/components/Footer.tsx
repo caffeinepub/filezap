@@ -15,6 +15,8 @@ const imageTools = [
   { label: "Compress Image", href: "/compress-image" },
   { label: "Resize Image", href: "/resize-image" },
   { label: "Convert Image", href: "/convert-image" },
+  { label: "JPG to PDF", href: "/jpg-to-pdf" },
+  { label: "PNG to PDF", href: "/png-to-pdf" },
 ];
 
 function LiveTicker() {
@@ -42,8 +44,6 @@ function LiveTicker() {
     };
   }, [actor]);
 
-  // Simulate increments — intentionally run once on mount only
-  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally run once
   useEffect(() => {
     const base = Math.floor(Math.random() * (183 - 47 + 1)) + 47;
     setCount((prev) => prev ?? base);
@@ -128,10 +128,26 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Platform */}
+          {/* Company */}
           <div>
-            <h3 className="text-sm font-semibold mb-3">Platform</h3>
+            <h3 className="text-sm font-semibold mb-3">Company</h3>
             <ul className="space-y-2">
+              <li>
+                <a
+                  href="/privacy-policy"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/contact"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Contact Us
+                </a>
+              </li>
               <li>
                 <a
                   href="/admin"
@@ -139,16 +155,6 @@ export default function Footer() {
                 >
                   Admin
                 </a>
-              </li>
-              <li>
-                <span className="text-sm text-muted-foreground">
-                  Privacy Policy
-                </span>
-              </li>
-              <li>
-                <span className="text-sm text-muted-foreground">
-                  Terms of Service
-                </span>
               </li>
             </ul>
           </div>

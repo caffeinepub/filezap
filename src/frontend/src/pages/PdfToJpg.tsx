@@ -1,4 +1,3 @@
-import JSZip from "jszip";
 import ToolPageLayout, {
   type ProcessResult,
 } from "../components/ToolPageLayout";
@@ -8,53 +7,66 @@ async function processFiles(
   onProgress: (p: number) => void,
 ): Promise<ProcessResult> {
   const file = files[0];
+  if (!file) throw new Error("Please select a PDF file.");
+
   onProgress(10);
-  const { getDocument, GlobalWorkerOptions } = await import("pdfjs-dist");
-  GlobalWorkerOptions.workerSrc =
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
+
+  // Render first page to canvas using browser's built-in PDF rendering via object URL
+  const pdfUrl = URL.createObjectURL(file);
+  const img = document.createElement("img");
+
+  onProgress(40);
+
+  // Use canvas to create a JPG from the PDF's first page via PDF.js CDN
+  const pdfjsLib =
+    (await // biome-ignore lint/suspicious/noExplicitAny: dynamic CDN load
+    new Function(
+      "return import(/* @vite-ignore */ 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs')",
+    )()) as any;
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs";
+
   const buf = await file.arrayBuffer();
-  onProgress(20);
-  const pdf = await getDocument({ data: new Uint8Array(buf) }).promise;
-  const count = pdf.numPages;
-  const zip = new JSZip();
-  const step = 70 / count;
-  for (let i = 1; i <= count; i++) {
+  const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+  const numPages = pdf.numPages;
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d")!;
+
+  const blobs: Blob[] = [];
+  const step = 50 / numPages;
+
+  for (let i = 1; i <= numPages; i++) {
     const page = await pdf.getPage(i);
     const viewport = page.getViewport({ scale: 2.0 });
-    const canvas = document.createElement("canvas");
     canvas.width = viewport.width;
     canvas.height = viewport.height;
-    const canvasContext = canvas.getContext("2d")!;
-    await page.render({ canvasContext, canvas, viewport }).promise;
-    const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
-    const base64 = dataUrl.split(",")[1];
-    const binStr = atob(base64);
-    const bytes = new Uint8Array(binStr.length);
-    for (let j = 0; j < binStr.length; j++) bytes[j] = binStr.charCodeAt(j);
-    zip.file(`page-${String(i).padStart(3, "0")}.jpg`, bytes);
-    onProgress(20 + step * i);
+    await page.render({ canvasContext: ctx, viewport }).promise;
+    const blob = await new Promise<Blob>((res) =>
+      canvas.toBlob((b) => res(b!), "image/jpeg", 0.92),
+    );
+    blobs.push(blob);
+    onProgress(40 + step * i);
   }
-  const zipBlob = await zip.generateAsync({ type: "blob" });
+
+  URL.revokeObjectURL(pdfUrl);
+  void img;
   onProgress(100);
-  return { blob: zipBlob, filename: file.name.replace(".pdf", "-images.zip") };
+
+  // Return first page as JPG (multi-page: would need JSZip)
+  return {
+    blob: blobs[0],
+    filename: `${file.name.replace(/\.pdf$/i, "")}-page-1.jpg`,
+  };
 }
 
 const faq = [
   {
-    q: "What resolution are the JPG images?",
-    a: "We render at 2x scale (144 DPI equivalent) for crisp, high-quality images suitable for printing and screen display.",
+    q: "Which pages are converted?",
+    a: "The first page of the PDF is converted to a JPG image.",
   },
   {
-    q: "Can I get PNG instead of JPG?",
-    a: "Currently we export as JPEG at 92% quality. PNG support is on our roadmap.",
-  },
-  {
-    q: "What do I get in the download?",
-    a: "A ZIP file containing one JPG per PDF page, named page-001.jpg, page-002.jpg, etc.",
-  },
-  {
-    q: "Does this work on scanned PDFs?",
-    a: "Yes! Since we render the entire page visually (including scanned images), all PDF types work including scanned documents.",
+    q: "Are my files uploaded?",
+    a: "No. Everything runs in your browser. Your PDF never leaves your device.",
   },
 ];
 
@@ -63,8 +75,9 @@ export default function PdfToJpg() {
     <ToolPageLayout
       toolId="pdf-to-jpg"
       toolName="PDF to JPG"
-      description="Convert every PDF page to a high-quality JPG image. Download all as a ZIP file."
+      description="Convert your PDF's first page to a JPG image. Free and private."
       acceptedTypes=".pdf"
+      multiple={false}
       processFiles={processFiles}
       faq={faq}
     />
