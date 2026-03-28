@@ -239,17 +239,9 @@ export default function HomePage() {
             transition={{ duration: 0.5 }}
             className="flex flex-col items-center"
           >
-            <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-4 py-1.5 text-sm text-emerald-400 mb-3">
+            <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-4 py-1.5 text-sm text-emerald-400 mb-6">
               <Zap className="w-3.5 h-3.5" />
               20+ Tools · 100% Free · No Signup · Instant Processing
-            </div>
-            <div className="text-xs text-gray-400 mb-6">
-              <Link
-                to="/bolttools-vs-ilovepdf"
-                className="hover:text-emerald-400 transition-colors underline underline-offset-2"
-              >
-                More tools than iLovePDF — all free &amp; private →
-              </Link>
             </div>
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight max-w-3xl">
               Merge &amp; Compress PDFs Instantly —{" "}
@@ -400,24 +392,16 @@ export default function HomePage() {
 
       {/* COMPARISON */}
       <section className="bg-[#09090b] py-16 px-6">
-        <h2 className="text-2xl md:text-3xl font-semibold text-center mb-4">
+        <h2 className="text-2xl md:text-3xl font-semibold text-center mb-10">
           Why Choose <span className="text-emerald-400">BoltTools</span>?
         </h2>
-        <p className="text-center text-gray-400 mb-10 text-sm">
-          <Link
-            to="/bolttools-vs-ilovepdf"
-            className="hover:text-emerald-400 underline underline-offset-2 transition-colors"
-          >
-            See full comparison with iLovePDF →
-          </Link>
-        </p>
         <div className="max-w-4xl mx-auto overflow-x-auto">
           <table className="w-full text-left border border-gray-800 rounded-xl overflow-hidden">
             <thead className="bg-gray-900">
               <tr>
                 <th className="p-4">Feature</th>
                 <th className="p-4 text-emerald-400">BoltTools</th>
-                <th className="p-4 text-gray-400">Traditional Tools</th>
+                <th className="p-4 text-gray-400">Other Tools</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-800">
