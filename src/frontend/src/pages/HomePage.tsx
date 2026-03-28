@@ -9,6 +9,7 @@ import {
   FileText,
   FileType,
   GripVertical,
+  HardDrive,
   Hash,
   ImageIcon,
   Lock,
@@ -18,9 +19,12 @@ import {
   RotateCcw,
   Scissors,
   ShieldCheck,
+  ShieldOff,
+  Smartphone,
   Table2,
   Trash2,
   Unlock,
+  UserX,
   Users,
   Zap,
 } from "lucide-react";
@@ -203,6 +207,45 @@ const trustBadges = [
     icon: <Users className="w-5 h-5" />,
     label: "No Sign-up",
     sub: "Just drop your file and go",
+  },
+];
+
+const featureCards = [
+  {
+    icon: <ShieldOff className="w-6 h-6" />,
+    title: "No Upload Ever",
+    desc: "Your files stay on your device. Always.",
+    glow: "from-emerald-500/25 via-emerald-600/10 to-transparent",
+  },
+  {
+    icon: <Zap className="w-6 h-6" />,
+    title: "Instant Processing",
+    desc: "Results in seconds, not minutes. No server queues.",
+    glow: "from-yellow-500/25 via-yellow-600/10 to-transparent",
+  },
+  {
+    icon: <Lock className="w-6 h-6" />,
+    title: "100% Private",
+    desc: "Zero network requests. Zero tracking. Zero risk.",
+    glow: "from-blue-500/25 via-blue-600/10 to-transparent",
+  },
+  {
+    icon: <UserX className="w-6 h-6" />,
+    title: "No Account Needed",
+    desc: "Drop your file and go. No signup, no email.",
+    glow: "from-violet-500/25 via-violet-600/10 to-transparent",
+  },
+  {
+    icon: <Smartphone className="w-6 h-6" />,
+    title: "Works on Mobile",
+    desc: "Optimized for mobile. Fast even on older phones.",
+    glow: "from-sky-500/25 via-sky-600/10 to-transparent",
+  },
+  {
+    icon: <HardDrive className="w-6 h-6" />,
+    title: "No File Size Limits",
+    desc: "Limited only by your device's RAM.",
+    glow: "from-rose-500/25 via-rose-600/10 to-transparent",
   },
 ];
 
@@ -390,58 +433,59 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* COMPARISON */}
-      <section className="bg-[#09090b] py-16 px-6">
-        <h2 className="text-2xl md:text-3xl font-semibold text-center mb-10">
-          Why Choose <span className="text-emerald-400">BoltTools</span>?
-        </h2>
-        <div className="max-w-4xl mx-auto overflow-x-auto">
-          <table className="w-full text-left border border-gray-800 rounded-xl overflow-hidden">
-            <thead className="bg-gray-900">
-              <tr>
-                <th className="p-4">Feature</th>
-                <th className="p-4 text-emerald-400">BoltTools</th>
-                <th className="p-4 text-gray-400">Other Tools</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-800">
-              <tr>
-                <td className="p-4">Upload Required</td>
-                <td className="p-4 text-red-400">❌ No (client-side)</td>
-                <td className="p-4 text-green-400">✔ Yes (server upload)</td>
-              </tr>
-              <tr>
-                <td className="p-4">Privacy</td>
-                <td className="p-4 text-emerald-400">🔒 High</td>
-                <td className="p-4 text-yellow-400">⚠ Medium</td>
-              </tr>
-              <tr>
-                <td className="p-4">Speed</td>
-                <td className="p-4 text-emerald-400">⚡ Instant</td>
-                <td className="p-4 text-gray-400">🐢 Slower</td>
-              </tr>
-              <tr>
-                <td className="p-4">File Storage</td>
-                <td className="p-4 text-red-400">❌ None</td>
-                <td className="p-4 text-green-400">✔ Stored on servers</td>
-              </tr>
-              <tr>
-                <td className="p-4">File Size Limit</td>
-                <td className="p-4 text-emerald-400">✔ Browser RAM only</td>
-                <td className="p-4 text-yellow-400">⚠ 50–200MB</td>
-              </tr>
-              <tr>
-                <td className="p-4">Account Required</td>
-                <td className="p-4 text-red-400">❌ No signup ever</td>
-                <td className="p-4 text-green-400">✔ Often required</td>
-              </tr>
-              <tr>
-                <td className="p-4">Works Offline</td>
-                <td className="p-4 text-emerald-400">✔ After first load</td>
-                <td className="p-4 text-gray-400">❌ Always online</td>
-              </tr>
-            </tbody>
-          </table>
+      {/* WHY BOLTTOOLS — FEATURE CARD GRID */}
+      <section className="bg-[#09090b] py-20 px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-14"
+          >
+            <p className="text-xs font-semibold tracking-widest uppercase text-emerald-500 mb-3">
+              Built Different
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold">
+              Why Choose <span className="text-emerald-400">BoltTools</span>?
+            </h2>
+            <p className="mt-3 text-gray-400 max-w-xl mx-auto">
+              Everything you'd expect from a professional tool — without the
+              compromises.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {featureCards.map((card, i) => (
+              <motion.div
+                key={card.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+                whileHover={{ scale: 1.03 }}
+                className="group relative overflow-hidden rounded-2xl border border-gray-800 bg-gray-900/60 backdrop-blur-sm p-6 cursor-default transition-colors hover:border-emerald-500/40"
+              >
+                {/* Glow blob */}
+                <div
+                  className={`absolute -top-8 -right-8 w-32 h-32 rounded-full bg-gradient-to-br ${card.glow} blur-2xl opacity-60 group-hover:opacity-90 transition-opacity`}
+                />
+
+                {/* Icon */}
+                <div className="relative z-10 w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-5">
+                  {card.icon}
+                </div>
+
+                {/* Text */}
+                <h3 className="relative z-10 text-lg font-bold text-white mb-2">
+                  {card.title}
+                </h3>
+                <p className="relative z-10 text-sm text-gray-400 leading-relaxed">
+                  {card.desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
