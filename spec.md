@@ -1,27 +1,59 @@
-# BoltTools.app — Revenue & Engagement Boost
+# BoltTools.app — Major Expansion (Beat iLovePDF)
 
 ## Current State
-The app has 9 working tools (PDF + Image), AdSense placeholder zones (1 on homepage, 2 on tool pages), a share popup, live ticker, and admin dashboard. All core features are complete.
+- 6 PDF tools: Compress, Merge, Split, PDF→Word, PDF→JPG, Add Watermark
+- 5 Image tools: Compress, Resize, Convert, JPG→PDF, PNG→PDF
+- Admin dashboard at /admin
+- Cyber-minimalist dark theme, emerald accents
+- System Health Panel on merge tool
+- AdSense slots, affiliate links, referral system
+- Privacy Policy + Contact pages
+- Homepage with hero, tool grid, comparison table
 
 ## Requested Changes (Diff)
 
 ### Add
-- **More ad slots**: A horizontal banner ad slot at the top of the homepage (below the hero drag-drop area, before tools grid), and a second leaderboard ad between the PDF and Image tool sections.
-- **Related Tools section** on every tool page (after the result/download area, before the FAQ): show 3–4 other tools with icons and links. This drives more pageviews per session = more ad impressions.
-- **Affiliate links section** in the Footer: "Premium Tools We Recommend" with 3–4 links to Adobe Acrobat, Canva, Smallpdf, ilovepdf with a small "Partner" badge. These earn affiliate commissions when users click through.
-- **Social proof numbers** on homepage: a stats bar showing "Over 10,000 files processed" and "Trusted by users in 50+ countries" to increase trust and reduce bounce rate.
-- **"Bookmark" nudge banner**: A dismissible banner after a user downloads a file in ToolPageLayout, suggesting they bookmark the site for next time.
+- **New PDF Tools (10):**
+  - Rotate PDF — rotate pages 90/180/270°, select individual pages or all
+  - Protect PDF — add password protection via pdf-lib
+  - Unlock PDF — remove password from PDF (client-side attempt)
+  - Remove Pages — select and delete specific pages
+  - Reorder Pages — drag-and-drop page reordering with thumbnails
+  - Add Page Numbers — stamp page numbers (position, font size, style)
+  - Sign PDF — draw or type a signature, place it on the page
+  - Word to PDF — convert .docx/.doc to PDF using client-side processing
+  - Excel to PDF — convert .xlsx to PDF (table rendering)
+  - PDF to PNG — convert PDF pages to PNG format
+- **New Image Tools (1):**
+  - Image to PDF — batch multiple images into one PDF
+- **New SEO Pages:**
+  - /rotate-pdf, /protect-pdf, /unlock-pdf, /remove-pdf-pages
+  - /reorder-pdf-pages, /add-page-numbers, /sign-pdf
+  - /word-to-pdf, /excel-to-pdf, /pdf-to-png, /image-to-pdf
+  - /bolttools-vs-ilovepdf — dedicated comparison page targeting "BoltTools vs iLovePDF" search
+- **Homepage upgrades:**
+  - Display all new tools in the tool grids
+  - Add a "vs iLovePDF" banner/link in hero area
+  - Mobile-first tool cards with better spacing
+  - "20+ Tools" badge in hero
 
 ### Modify
-- Homepage: add 2 more AdSense banner slots (between hero and PDF tools, and between PDF tools and Image tools).
-- ToolPageLayout: add RelatedTools component below result section, add bookmark nudge after download.
-- Footer: add affiliate links column.
+- App.tsx — add routes for all new pages
+- HomePage.tsx — add new tools to pdfTools and imageTools arrays, update hero badge
+- Footer.tsx — add new tool links in sitemap section
 
 ### Remove
-- Nothing removed.
+- Nothing removed
 
 ## Implementation Plan
-1. Create `RelatedTools.tsx` component — takes current toolId, shows 3 other tools from the full tools list with icon, name, description and link.
-2. Update `ToolPageLayout.tsx` — render `<RelatedTools toolId={toolId} />` after the result section, add bookmark nudge toast/banner after download.
-3. Update `HomePage.tsx` — add 2 more `.adsense-placeholder` banner divs in strategic positions, add social proof stats bar.
-4. Update `Footer.tsx` — add an "Affiliate Tools" section with 4 partner links.
+1. Create new page components for each new tool (all client-side, same pattern as existing tools)
+2. For tools requiring pdf-lib: Rotate, Protect, Remove Pages, Add Page Numbers — use pdf-lib directly
+3. For Sign PDF: canvas-based signature pad, place on PDF via pdf-lib
+4. For Word/Excel to PDF: best-effort client-side conversion with clear messaging about limitations
+5. For PDF to PNG: use pdfjs-dist canvas rendering, download as PNG
+6. For Image to PDF: batch images → pdf-lib PDFDocument
+7. For all new tools: include System Health Panel, progress bar, result screen, SEO content block, related tools section
+8. Add /bolttools-vs-ilovepdf page with detailed comparison, privacy focus, and SEO content
+9. Update App.tsx routes
+10. Update HomePage with new tool cards
+11. Validate and deploy

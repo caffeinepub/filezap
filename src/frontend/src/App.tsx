@@ -28,6 +28,19 @@ const JpgToPdf = lazy(() => import("./pages/JpgToPdf"));
 const PngToPdf = lazy(() => import("./pages/PngToPdf"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
+// New tools
+const RotatePdf = lazy(() => import("./pages/RotatePdf"));
+const ProtectPdf = lazy(() => import("./pages/ProtectPdf"));
+const UnlockPdf = lazy(() => import("./pages/UnlockPdf"));
+const RemovePages = lazy(() => import("./pages/RemovePages"));
+const ReorderPages = lazy(() => import("./pages/ReorderPages"));
+const AddPageNumbers = lazy(() => import("./pages/AddPageNumbers"));
+const SignPdf = lazy(() => import("./pages/SignPdf"));
+const WordToPdf = lazy(() => import("./pages/WordToPdf"));
+const ExcelToPdf = lazy(() => import("./pages/ExcelToPdf"));
+const PdfToPng = lazy(() => import("./pages/PdfToPng"));
+const ImageToPdf = lazy(() => import("./pages/ImageToPdf"));
+const VsIlovepdf = lazy(() => import("./pages/VsIlovepdf"));
 
 const PageLoader = () => (
   <div className="min-h-[60vh] flex items-center justify-center">
@@ -159,6 +172,67 @@ const contactRoute = createRoute({
   path: "/contact",
   component: wrap(ContactPage),
 });
+// New routes
+const rotatePdfRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/rotate-pdf",
+  component: wrap(RotatePdf),
+});
+const protectPdfRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/protect-pdf",
+  component: wrap(ProtectPdf),
+});
+const unlockPdfRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/unlock-pdf",
+  component: wrap(UnlockPdf),
+});
+const removePagesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/remove-pages",
+  component: wrap(RemovePages),
+});
+const reorderPagesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/reorder-pages",
+  component: wrap(ReorderPages),
+});
+const addPageNumbersRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/add-page-numbers",
+  component: wrap(AddPageNumbers),
+});
+const signPdfRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/sign-pdf",
+  component: wrap(SignPdf),
+});
+const wordToPdfRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/word-to-pdf",
+  component: wrap(WordToPdf),
+});
+const excelToPdfRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/excel-to-pdf",
+  component: wrap(ExcelToPdf),
+});
+const pdfToPngRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/pdf-to-png",
+  component: wrap(PdfToPng),
+});
+const imageToPdfRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/image-to-pdf",
+  component: wrap(ImageToPdf),
+});
+const vsIlovepdfRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/bolttools-vs-ilovepdf",
+  component: wrap(VsIlovepdf),
+});
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -176,6 +250,18 @@ const routeTree = rootRoute.addChildren([
   pngToPdfRoute,
   privacyPolicyRoute,
   contactRoute,
+  rotatePdfRoute,
+  protectPdfRoute,
+  unlockPdfRoute,
+  removePagesRoute,
+  reorderPagesRoute,
+  addPageNumbersRoute,
+  signPdfRoute,
+  wordToPdfRoute,
+  excelToPdfRoute,
+  pdfToPngRoute,
+  imageToPdfRoute,
+  vsIlovepdfRoute,
 ]);
 
 const router = createRouter({ routeTree });

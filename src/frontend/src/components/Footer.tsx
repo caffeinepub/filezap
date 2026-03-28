@@ -1,6 +1,4 @@
 import { Zap } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { useActor } from "../hooks/useActor";
 
 const pdfTools = [
   { label: "Compress PDF", href: "/compress-pdf" },
@@ -19,65 +17,12 @@ const imageTools = [
   { label: "PNG to PDF", href: "/png-to-pdf" },
 ];
 
-function LiveTicker() {
-  const { actor } = useActor();
-  const [count, setCount] = useState<number | null>(null);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  useEffect(() => {
-    let mounted = true;
-    const fetchCount = async () => {
-      if (!actor) return;
-      try {
-        const a = actor as any;
-        if (typeof a.getHourlyFileCount === "function") {
-          const c = await a.getHourlyFileCount();
-          if (mounted) setCount(Number(c));
-        }
-      } catch {
-        // ignore
-      }
-    };
-    fetchCount();
-    return () => {
-      mounted = false;
-    };
-  }, [actor]);
-
-  useEffect(() => {
-    const base = Math.floor(Math.random() * (183 - 47 + 1)) + 47;
-    setCount((prev) => prev ?? base);
-    const tick = () => {
-      const delay = Math.floor(Math.random() * (15000 - 8000 + 1)) + 8000;
-      intervalRef.current = setTimeout(() => {
-        setCount((prev) => (prev ?? base) + 1);
-        tick();
-      }, delay);
-    };
-    tick();
-    return () => {
-      if (intervalRef.current) clearTimeout(intervalRef.current);
-    };
-  }, []);
-
-  return (
-    <div className="w-full border-b border-border bg-secondary/30 py-2 px-4 text-center text-xs text-muted-foreground">
-      <span>⚡ </span>
-      <span className="ticker-number font-bold text-foreground">
-        {count ?? "..."}
-      </span>
-      <span> files processed in the last hour</span>
-    </div>
-  );
-}
-
 export default function Footer() {
   const year = new Date().getFullYear();
   const utm = `https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(typeof window !== "undefined" ? window.location.hostname : "bolttools")}`;
 
   return (
     <footer className="border-t border-border bg-card mt-20">
-      <LiveTicker />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8">
           {/* Brand */}

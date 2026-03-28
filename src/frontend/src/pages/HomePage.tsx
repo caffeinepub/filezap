@@ -4,13 +4,23 @@ import { useNavigate } from "@tanstack/react-router";
 import {
   ArrowRight,
   Cpu,
+  FileImage,
   FileOutput,
   FileText,
+  FileType,
+  GripVertical,
+  Hash,
   ImageIcon,
   Lock,
   Merge,
   Minimize2,
+  PenLine,
+  RotateCcw,
   Scissors,
+  ShieldCheck,
+  Table2,
+  Trash2,
+  Unlock,
   Users,
   Zap,
 } from "lucide-react";
@@ -55,11 +65,81 @@ const pdfTools = [
     color: "from-green-500 to-green-600",
   },
   {
+    id: "pdf-to-png",
+    name: "PDF → PNG",
+    desc: "Convert PDF pages to PNG",
+    icon: <ImageIcon className="w-5 h-5" />,
+    color: "from-lime-500 to-lime-600",
+  },
+  {
     id: "add-watermark",
     name: "Add Watermark",
     desc: "Stamp text on every PDF page",
     icon: <FileText className="w-5 h-5" />,
     color: "from-teal-500 to-teal-600",
+  },
+  {
+    id: "rotate-pdf",
+    name: "Rotate PDF",
+    desc: "Rotate pages 90°, 180° or 270°",
+    icon: <RotateCcw className="w-5 h-5" />,
+    color: "from-sky-500 to-sky-600",
+  },
+  {
+    id: "protect-pdf",
+    name: "Protect PDF",
+    desc: "Add password to your PDF",
+    icon: <ShieldCheck className="w-5 h-5" />,
+    color: "from-red-500 to-red-600",
+  },
+  {
+    id: "unlock-pdf",
+    name: "Unlock PDF",
+    desc: "Remove password from PDF",
+    icon: <Unlock className="w-5 h-5" />,
+    color: "from-yellow-500 to-yellow-600",
+  },
+  {
+    id: "remove-pages",
+    name: "Remove Pages",
+    desc: "Delete specific PDF pages",
+    icon: <Trash2 className="w-5 h-5" />,
+    color: "from-rose-500 to-rose-600",
+  },
+  {
+    id: "reorder-pages",
+    name: "Reorder Pages",
+    desc: "Change PDF page order",
+    icon: <GripVertical className="w-5 h-5" />,
+    color: "from-purple-500 to-purple-600",
+  },
+  {
+    id: "add-page-numbers",
+    name: "Add Page Numbers",
+    desc: "Stamp page numbers on PDF",
+    icon: <Hash className="w-5 h-5" />,
+    color: "from-indigo-500 to-indigo-600",
+  },
+  {
+    id: "sign-pdf",
+    name: "Sign PDF",
+    desc: "Draw or type your signature",
+    icon: <PenLine className="w-5 h-5" />,
+    color: "from-emerald-500 to-emerald-600",
+  },
+  {
+    id: "word-to-pdf",
+    name: "Word to PDF",
+    desc: "Convert .docx documents to PDF",
+    icon: <FileType className="w-5 h-5" />,
+    color: "from-blue-600 to-blue-700",
+  },
+  {
+    id: "excel-to-pdf",
+    name: "Excel to PDF",
+    desc: "Convert .xlsx spreadsheets to PDF",
+    icon: <Table2 className="w-5 h-5" />,
+    color: "from-green-600 to-green-700",
   },
 ];
 
@@ -99,6 +179,13 @@ const imageTools = [
     icon: <FileText className="w-5 h-5" />,
     color: "from-emerald-500 to-emerald-600",
   },
+  {
+    id: "image-to-pdf",
+    name: "Images to PDF",
+    desc: "Combine multiple images into PDF",
+    icon: <FileImage className="w-5 h-5" />,
+    color: "from-violet-500 to-violet-600",
+  },
 ];
 
 const trustBadges = [
@@ -137,19 +224,14 @@ export default function HomePage() {
 
   return (
     <div className="w-full bg-[#09090b] text-white">
-      {/* ================= HERO SECTION ================= */}
+      {/* HERO */}
       <section className="relative min-h-screen w-full overflow-hidden">
-        {/* Background Image */}
         <img
           src="/assets/generated/hero.dim_1920x1080.jpg"
           alt="background"
           className="absolute inset-0 w-full h-full object-cover"
         />
-
-        {/* Dark Overlay */}
         <div className="absolute inset-0 bg-black/75" />
-
-        {/* Content */}
         <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -157,22 +239,26 @@ export default function HomePage() {
             transition={{ duration: 0.5 }}
             className="flex flex-col items-center"
           >
-            <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-4 py-1.5 text-sm text-emerald-400 mb-6">
+            <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-4 py-1.5 text-sm text-emerald-400 mb-3">
               <Zap className="w-3.5 h-3.5" />
-              100% Free · No Signup · Instant Processing
+              20+ Tools · 100% Free · No Signup · Instant Processing
             </div>
-
+            <div className="text-xs text-gray-400 mb-6">
+              <Link
+                to="/bolttools-vs-ilovepdf"
+                className="hover:text-emerald-400 transition-colors underline underline-offset-2"
+              >
+                More tools than iLovePDF — all free &amp; private →
+              </Link>
+            </div>
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight max-w-3xl">
               Merge &amp; Compress PDFs Instantly —{" "}
               <span className="text-emerald-400">No Upload Required</span>
             </h1>
-
             <p className="mt-4 text-gray-300 max-w-xl text-lg">
               Process your files directly in your browser. Fast, private, and
               secure.
             </p>
-
-            {/* CTA Buttons */}
             <div className="mt-6 flex gap-4 flex-wrap justify-center">
               <Link to="/merge-pdf">
                 <button
@@ -191,13 +277,9 @@ export default function HomePage() {
                 </button>
               </Link>
             </div>
-
-            {/* Trust Text */}
             <p className="mt-6 text-sm text-gray-400">
               🔒 No uploads • ⚡ Instant • 📱 Works on mobile
             </p>
-
-            {/* Drop zone */}
             <motion.div
               initial={{ opacity: 0, y: 32 }}
               animate={{ opacity: 1, y: 0 }}
@@ -215,24 +297,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ================= AD SLOT ================= */}
+      {/* AD */}
       <div className="adsense-placeholder max-w-4xl mx-auto px-4 py-6">
         Advertisement
       </div>
 
-      {/* ================= PDF TOOLS ================= */}
+      {/* PDF TOOLS */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <h2 className="text-2xl font-bold mb-1">PDF Tools</h2>
         <p className="text-gray-400 text-sm mb-6">
-          Everything you need to work with PDF files
+          Everything you need to work with PDF files — {pdfTools.length} tools,
+          all free
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {pdfTools.map((tool, i) => (
             <motion.div
               key={tool.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.07 }}
+              transition={{ delay: i * 0.04 }}
             >
               <Link
                 to={`/${tool.id}` as "/"}
@@ -244,10 +327,10 @@ export default function HomePage() {
                   {tool.icon}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold group-hover:text-emerald-400 transition-colors">
+                  <p className="font-semibold group-hover:text-emerald-400 transition-colors text-sm">
                     {tool.name}
                   </p>
-                  <p className="text-sm text-gray-400">{tool.desc}</p>
+                  <p className="text-xs text-gray-400">{tool.desc}</p>
                 </div>
                 <ArrowRight className="w-4 h-4 text-gray-500 ml-auto shrink-0 group-hover:text-emerald-400 transition-colors" />
               </Link>
@@ -256,12 +339,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ================= AD SLOT ================= */}
+      {/* AD */}
       <div className="adsense-placeholder max-w-4xl mx-auto px-4 mb-6">
         Advertisement
       </div>
 
-      {/* ================= IMAGE TOOLS ================= */}
+      {/* IMAGE TOOLS */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-10">
         <h2 className="text-2xl font-bold mb-1">Image Tools</h2>
         <p className="text-gray-400 text-sm mb-6">
@@ -297,7 +380,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ================= TRUST BADGES ================= */}
+      {/* TRUST BADGES */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {trustBadges.map((b) => (
@@ -315,12 +398,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ================= COMPARISON SECTION ================= */}
+      {/* COMPARISON */}
       <section className="bg-[#09090b] py-16 px-6">
-        <h2 className="text-2xl md:text-3xl font-semibold text-center mb-10">
+        <h2 className="text-2xl md:text-3xl font-semibold text-center mb-4">
           Why Choose <span className="text-emerald-400">BoltTools</span>?
         </h2>
-
+        <p className="text-center text-gray-400 mb-10 text-sm">
+          <Link
+            to="/bolttools-vs-ilovepdf"
+            className="hover:text-emerald-400 underline underline-offset-2 transition-colors"
+          >
+            See full comparison with iLovePDF →
+          </Link>
+        </p>
         <div className="max-w-4xl mx-auto overflow-x-auto">
           <table className="w-full text-left border border-gray-800 rounded-xl overflow-hidden">
             <thead className="bg-gray-900">
@@ -371,13 +461,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ================= CTA ================= */}
+      {/* CTA */}
       <section className="max-w-3xl mx-auto px-4 sm:px-6 py-14 text-center">
         <h2 className="text-2xl font-bold mb-2">
           Ready to bolt through your files?
         </h2>
         <p className="text-gray-400 mb-6">
-          Join thousands who use BoltTools.app daily. Free, fast, and private.
+          20+ free tools. No signup. No uploads. All private.
         </p>
         <Button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
